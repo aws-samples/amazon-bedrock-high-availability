@@ -12,7 +12,7 @@ For the demonstration in this repository, you will see an approach for using Ama
    
 The illustration below details what this solution will look like once fully implemented.
 
-<img src="./images/Solution%20Overview.png" />
+<img src="images/Solution Overiew.png">
 
 <br /> 
 
