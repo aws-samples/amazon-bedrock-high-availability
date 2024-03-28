@@ -3,7 +3,7 @@
 ## Introduction
 In this repository, we'll explore how to set up high availability with Amazon Bedrock, a fully managed service that simplifies building and running applications on AWS. More specifically, we'll focus on leveraging Amazon Bedrock's provisioned throughput as our primary endpoint and using Amazon Bedrock on-demand as our secondary endpoint. Additionally, we'll demonstrate how to switch between regions using the same concept.
 
-**NOTE) The architecture in this repository is only designed for development purposes only.**
+**NOTE) The architecture in this repository is for development purposes only.**
 
 ## Walkthrough
 For the demonstration in this repository, you will see an approach for using Amazon Bedrock in a high-available manner using [Provisioned Throughput](https://docs.aws.amazon.com/bedrock/latest/userguide/prov-throughput.html) and [on-demand throughput](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html). The following is a detailed outline of the architecture in this repository:
