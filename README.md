@@ -32,7 +32,11 @@ To follow through this repository, you will need an <a href="https://console.aws
 
 ### Step 3: Create Provisioned Throughput for Anthropic Claude v2 in Amazon Bedrock (AWS CLI)
 1. Run the following command to create Provisioned Throughput for Anthropic Claude v2
-```aws bedrock create-provisioned-model-throughput \
+   
+**NOTE) The following command uses a one month commitment duration. Once provisioned, you will be billed for the entire month.**
+
+```
+aws bedrock create-provisioned-model-throughput \
    --model-units 1 \
    --commitment-duration OneMonth \
    --provisioned-model-name ha-test-model \
@@ -49,7 +53,7 @@ python3 amazon_bedrock_ha.py <REPLACE_ME_WITH_PROMPT> <REPLACE_ME_WITH_PROVISION
 
 ## Cleaning up
 Be sure to remove the resources created in this repository to avoid charges. Run the following commands to delete these resources:
-1. ```aws bedrock delete-provisioned-model-throughput --provisioned-model-id <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN>```
+1. ``` aws bedrock delete-provisioned-model-throughput --provisioned-model-id <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN> ```
 
 ## Security
 
