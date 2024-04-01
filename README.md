@@ -41,7 +41,7 @@ aws bedrock get-provisioned-model-throughput \
     --provisioned-model-id ha-test-model
 ```
 
-### Step 3: Run the amazon_bedrock_ha.py Python script
+### Step 3: Run the amazon_bedrock_ha.py Python script (Python 3)
 1. Run the following command to execute the amazon_bedrock_ha.py Python script
 ```
 python3 amazon_bedrock_ha.py <REPLACE_ME_WITH_PROMPT> <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN>
