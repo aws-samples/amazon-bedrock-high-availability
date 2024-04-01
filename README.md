@@ -22,30 +22,26 @@ To follow through this repository, you will need an <a href="https://console.aws
 ### Step 1: Grant model access for Anthropic Claude v2 in Amazon Bedrock (AWS Console)
 1. Ensure you have [granted model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html#model-access-add) to the ```Anthropic Claude``` model in Amazon Bedrock.
 
-### Step 2: Request a Model unit quota increase (AWS Console)
-1. Navigate to the [Service Quotas dashboard](https://us-east-1.console.aws.amazon.com/servicequotas/home/services/bedrock/quotas) for Amazon Bedrock
-2. Search for the ```Model units per provisioned model for Anthropic Claude V2 18K``` quota limit
-3. Select the ```Request increase at account level``` button
-4. Update the ```Increase quota value``` to 1
-5. Select the ```Request``` button
-6. Once the quota increase has completed, move to step 3
-
-### Step 3: Create Provisioned Throughput for Anthropic Claude v2 in Amazon Bedrock (AWS CLI)
+### Step 2: Create Provisioned Throughput for Anthropic Claude v2 in Amazon Bedrock (AWS CLI)
 1. Run the following command to create Provisioned Throughput for Anthropic Claude v2
    
-**NOTE) The following command uses a one month commitment duration. Once provisioned, you will be billed for the entire month.**
+**NOTE) The following command is a no commitment purchase for Provisioned Throughput. Once it is executed, billing will end only when you delete the Provisioned Throughput. For more information, please review [Provisioned Throughput for Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/prov-throughput.html)**
 
 ```
 aws bedrock create-provisioned-model-throughput \
    --model-units 1 \
-   --commitment-duration OneMonth \
    --provisioned-model-name ha-test-model \
-   --model-id arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-v2 
+   --model-id arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-v2:0:18k 
 
    #ENSURE TO RECORD THE "provisionedModelArn" VALUE FROM THE OUTPUT OF THE COMMAND ABOVE  
 ```
+1. Run the following command to check the status of the Provisioned Throughput. Proceed to the next step only when the status is ```Created```
+```
+aws bedrock get-provisioned-model-throughput \
+    --provisioned-model-id ha-test-model
+```
 
-### Step 4: Run the amazon_bedrock_ha.py Python script
+### Step 3: Run the amazon_bedrock_ha.py Python script
 1. Run the following command to execute the amazon_bedrock_ha.py Python script
 ```
 python3 amazon_bedrock_ha.py <REPLACE_ME_WITH_PROMPT> <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN>
