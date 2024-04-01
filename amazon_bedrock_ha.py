@@ -7,24 +7,23 @@ try:
 except IndexError:
     raise ValueError("Prompt and Provisioned model ARN are required")
 
-formatted_prompt = json.dumps({"prompt": f"\n\nHuman: {prompt}\n\nAssistant:"})
+formatted_prompt = f"Human: {prompt}\n\nAssistant:"
 print(f"Using prompt: {prompt}")
 
 #Building request payload for Amazon Bedrock
 body = json.dumps({
     "prompt": formatted_prompt,
-    "maxTokens": 1024, 
-    "temperature": 0.5, 
-    "topP": 1,
-    "topK": 250
-}) 
+    "max_tokens_to_sample": 200,
+    "temperature": 0.5,
+    "stop_sequences": ["\n\nHuman:"]
+    })
 
 # Set up Amazon Bedrock clients for Provisioned Throughput and on-demand throughput
 bedrock_provisioned_client = boto3.client('bedrock-runtime', region_name='us-east-1')
 bedrock_on_demand_client = boto3.client('bedrock-runtime', region_name='us-west-2')
 
 # Function to call Amazon Bedrock Provisioned Throughput in region 1
-def call_bedrock_provisioned(data, client_error):
+def call_bedrock_provisioned(client_error):
     try:
         provisioned_response = bedrock_provisioned_client.invoke_model(body=body, 
                                                                        modelId=provisioned_model_arn, 
@@ -34,27 +33,28 @@ def call_bedrock_provisioned(data, client_error):
             raise client_error
         
         provisioned_response_body = json.loads(provisioned_response.get('body').read())
-        provisioned_response_text = provisioned_response_body.get("completions")[0].get("data").get("text")
+        provisioned_response_text = f"From Provisioned Throughput in region 1: {provisioned_response_body.get('completion')}"
 
         return provisioned_response_text
     except ClientError as client_exception:
-        print("exception occuring")
         if client_exception.response['Error']['Code'] == 'ThrottlingException':
             print("Throttling detected, retrying with on-demand...")
-            on_demand_response = call_bedrock_on_demand(data)
+            on_demand_response = call_bedrock_on_demand()
             return on_demand_response
         else:
             raise client_exception
 
 # Function to call Amazon Bedrock on-demand throughput in region 2
-def call_bedrock_on_demand(data):
+def call_bedrock_on_demand():
     try:
+        on_demand_model_id="anthropic.claude-instant-v1"
         on_demand_response = bedrock_on_demand_client.invoke_model(body=body, 
-                                                        modelId=provisioned_model_arn,
+                                                        modelId=on_demand_model_id,
                                                         accept='application/json', 
                                                         contentType='application/json')
+        
         on_demand_response_body = json.loads(on_demand_response.get('body').read())
-        on_demand_response_text = on_demand_response_body.get("completions")[0].get("data").get("text")
+        on_demand_response_text = f"From on-demand in region 2: {on_demand_response_body.get('completion')}"
 
         return on_demand_response_text
     except ClientError as client_exception:
@@ -68,7 +68,10 @@ if __name__ == "__main__":
         if counter == 5:
             #Create dummy throttling exception error for testing purposes only
             client_error = ClientError(error_response={"Error":{"Code":"ThrottlingException"}}, operation_name="DummyOperation")
-        response = call_bedrock_provisioned(prompt, client_error)
+        elif counter == 9:
+            client_error = None
+        response = call_bedrock_provisioned(client_error)
         print(response)
         counter += 1
+        
     

@@ -31,7 +31,7 @@ To follow through this repository, you will need an <a href="https://console.aws
 aws bedrock create-provisioned-model-throughput \
    --model-units 1 \
    --provisioned-model-name ha-test-model \
-   --model-id arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-v2:0:18k 
+   --model-id arn:aws:bedrock:us-east-1::foundation-model/anthropic.claude-instant-v1:2:100k
 
    #ENSURE TO RECORD THE "provisionedModelArn" VALUE FROM THE OUTPUT OF THE COMMAND ABOVE  
 ```
@@ -49,7 +49,7 @@ python3 amazon_bedrock_ha.py <REPLACE_ME_WITH_PROMPT> <REPLACE_ME_WITH_PROVISION
 
 ## Cleaning up
 Be sure to remove the resources created in this repository to avoid charges. Run the following commands to delete these resources:
-1. ``` aws bedrock delete-provisioned-model-throughput --provisioned-model-id <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN> ```
+1. ``` aws bedrock delete-provisioned-model-throughput --provisioned-model-id ha-test-model ```
 
 ## Security
 
