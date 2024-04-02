@@ -3,7 +3,7 @@
 ## Introduction
 In this repository, we'll explore how to set up high availability with Amazon Bedrock, a fully managed service that simplifies building and running applications on AWS. More specifically, we'll focus on leveraging Amazon Bedrock's provisioned throughput as our primary endpoint and using Amazon Bedrock on-demand as our secondary endpoint. Additionally, we'll demonstrate how to switch between regions using the same concept.
 
-**NOTE) The architecture in this repository is for development purposes only.**
+**NOTE) The architecture in this repository is for development purposes only and will incur costs.**
 
 ## Walkthrough
 For the demonstration in this repository, you will see an approach for using Amazon Bedrock in a high-available manner using [Provisioned Throughput](https://docs.aws.amazon.com/bedrock/latest/userguide/prov-throughput.html) and [on-demand throughput](https://docs.aws.amazon.com/bedrock/latest/userguide/model-ids.html). The following is a detailed outline of the architecture in this repository:
@@ -12,18 +12,20 @@ For the demonstration in this repository, you will see an approach for using Ama
    
 The illustration below details what this solution will look like once fully implemented.
 
-<img src="images/Solution Overiew.png">
+<img src="images/Solution Overview.png">
 
 <br /> 
 
 ### Prerequisites
 To follow through this repository, you will need an <a href="https://console.aws.amazon.com/" >AWS account</a>, an <a href="https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/" >Amazon Bedrock supported region</a>, access to [Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/setting-up.html) and access to the <a href="https://aws.amazon.com/cli/">AWS CLI</a>. In addition, you will need [Python 3](https://www.python.org/downloads/) installed locally. We also assume you have familiar with the basics of Linux bash commands.
 
-### Step 1: Grant model access for Anthropic Claude v2 in Amazon Bedrock (AWS Console)
-1. Ensure you have [granted model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html#model-access-add) to the ```Anthropic Claude``` model in Amazon Bedrock.
+**NOTE) Although the assets in this repository work mainly around the Anthropic Claude Instant model, they can be applied to work with any model in Amazon Bedrock that supports Provisioned Throughput and is available in both regions.**
 
-### Step 2: Create Provisioned Throughput for Anthropic Claude v2 in Amazon Bedrock (AWS CLI)
-1. Run the following command to create Provisioned Throughput for Anthropic Claude v2
+### Step 1: Grant model access for Anthropic Claude Instant in Amazon Bedrock (AWS Console)
+1. Ensure you have [granted model access](https://docs.aws.amazon.com/bedrock/latest/userguide/model-access.html#model-access-add) to the ```Anthropic Claude Instant``` model in Amazon Bedrock.
+
+### Step 2: Create Provisioned Throughput for Anthropic Claude Instant in Amazon Bedrock (AWS CLI)
+1. Run the following command to create Provisioned Throughput for ```Anthropic Claude Instant```
    
 **NOTE) The following command is a no commitment purchase for Provisioned Throughput. Once it is executed, billing will end only when you delete the Provisioned Throughput. For more information, please review [Provisioned Throughput for Amazon Bedrock](https://docs.aws.amazon.com/bedrock/latest/userguide/prov-throughput.html)**
 
@@ -44,7 +46,7 @@ aws bedrock get-provisioned-model-throughput \
 ### Step 3: Run the amazon_bedrock_ha.py Python script (Python 3)
 1. Run the following command to execute the amazon_bedrock_ha.py Python script
 ```
-python3 amazon_bedrock_ha.py <REPLACE_ME_WITH_PROMPT> <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN>
+python3 amazon_bedrock_ha.py <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN> <REPLACE_ME_WITH_PROMPT> 
 ```
 
 ## Cleaning up

@@ -2,11 +2,12 @@ import boto3, sys, json
 from botocore.exceptions import ClientError
 
 try:
-    prompt = sys.argv[1]
-    provisioned_model_arn = sys.argv[2]
+    provisioned_model_arn = sys.argv[1]
+    prompt = sys.argv[2]
 except IndexError:
     raise ValueError("Prompt and Provisioned model ARN are required")
 
+on_demand_model_id="anthropic.claude-instant-v1"
 formatted_prompt = f"Human: {prompt}\n\nAssistant:"
 print(f"Using prompt: {prompt}")
 
@@ -47,7 +48,7 @@ def call_bedrock_provisioned(client_error):
 # Function to call Amazon Bedrock on-demand throughput in region 2
 def call_bedrock_on_demand():
     try:
-        on_demand_model_id="anthropic.claude-instant-v1"
+        
         on_demand_response = bedrock_on_demand_client.invoke_model(body=body, 
                                                         modelId=on_demand_model_id,
                                                         accept='application/json', 
