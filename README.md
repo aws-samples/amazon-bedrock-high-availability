@@ -46,8 +46,10 @@ aws bedrock get-provisioned-model-throughput \
 ### Step 3: Run the amazon_bedrock_ha.py Python script (Python 3)
 1. Run the following command to execute the amazon_bedrock_ha.py Python script
 ```
-python3 amazon_bedrock_ha.py <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN> <REPLACE_ME_WITH_PROMPT> 
+python3 amazon_bedrock_ha.py <REPLACE_ME_WITH_PROMPT> <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN>  
 ```
+
+**NOTE) Without the throttling exception error-handling provided in the amazon_bedrock_ha.py script, the boto3 SDK would return a BedrockRuntime.Client.exceptions.ThrottlingException exception similar to ```botocore.exceptions.ClientError: An error occurred (ThrottlingException) when calling the DummyOperation operation: Unknown```.**
 
 ## Cleaning up
 Be sure to remove the resources created in this repository to avoid charges. Run the following commands to delete these resources:
