@@ -49,7 +49,7 @@ aws bedrock get-provisioned-model-throughput \
 python3 amazon_bedrock_ha.py <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN> <REPLACE_ME_WITH_PROMPT>  
 ```
 
-**NOTE) Without the throttling exception error-handling provided in the amazon_bedrock_ha.py script, the boto3 SDK would return an unhandled BedrockRuntime.Client.exceptions.ThrottlingException exception similar to ```botocore.exceptions.ClientError: An error occurred (ThrottlingException) when calling the DummyOperation operation: Unknown```. This error would continue to occur until throttling has stopped.**
+**NOTE) Without the throttling exception error-handling provided in the amazon_bedrock_ha.py script, the boto3 SDK would return an unhandled BedrockRuntime.Client.exceptions.ThrottlingException exception similar to ```botocore.exceptions.ClientError: An error occurred (ThrottlingException) when calling the DummyOperation operation: Unknown```. This error would continue to occur until throttling has stopped for the client.**
 
 ## Cleaning up
 Be sure to remove the resources created in this repository to avoid charges. Run the following commands to delete these resources:
