@@ -2,7 +2,7 @@ import boto3, sys, json, re
 from botocore.exceptions import ClientError
 
 # CONSTANTS
-ON_DEMAND_MODEL_ID="anthropic.claude-instant-v1"
+ON_DEMAND_MODEL_ID="anthropic.claude-3-haiku-20240307-v1:0"
 REGION1 = 'us-east-1'
 REGION2 = 'us-west-2'
 
@@ -38,7 +38,9 @@ def call_bedrock_primary(client_error):
             raise client_error
         
         primary_response_body = json.loads(primary_response.get('body').read())
-        primary_response_text = f"From provisioned throughput in {REGION1}: {primary_response_body.get('completion')}"
+        primary_response_content = primary_response_body['content']
+        primary_response_text_compiled = [output["text"] for output in primary_response_content]
+        primary_response_text = f"From provisioned throughput in {REGION1}: {primary_response_text_compiled}"
 
         return primary_response_text
             
@@ -61,7 +63,9 @@ def call_bedrock_secondary():
                                                         contentType='application/json')
         
         on_demand_response_body = json.loads(on_demand_response.get('body').read())
-        on_demand_response_text = f"From on-demand in {REGION2}: {on_demand_response_body.get('completion')}"
+        on_demand_response_content = on_demand_response_body['content']
+        on_demand_response_text_compiled = [output["text"] for output in on_demand_response_content]
+        on_demand_response_text = f"From on-demand throughput in {REGION2}: {on_demand_response_text_compiled}"
 
         return on_demand_response_text
     except ClientError as client_exception:
@@ -91,15 +95,15 @@ else:
     except IndexError:
         raise ValueError("Prompt, Provisioned model ARN, and Regions are required if four parameters are passed")
 
-formatted_prompt = f"Human: {prompt}\n\nAssistant:"
+
 print(f"Using prompt: {prompt}")
+user_message =  [{"role": "user", "content": prompt}]
 
 #Building request payload for Amazon Bedrock
 body = json.dumps({
-    "prompt": formatted_prompt,
-    "max_tokens_to_sample": 200,
-    "temperature": 0.5,
-    "stop_sequences": ["\n\nHuman:"]
+    "anthropic_version": "bedrock-2023-05-31",
+    "max_tokens": 1000,
+    "messages": user_message
     })
 
 # Set up Amazon Bedrock clients for Provisioned Throughput and on-demand throughput
