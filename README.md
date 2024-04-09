@@ -59,6 +59,31 @@ aws bedrock get-provisioned-model-throughput \
 python3 amazon_bedrock_ha.py <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN> <REPLACE_ME_WITH_PROMPT>  
 ```
 
+Here is an example with actual values and output for using a second on-demand region
+
+```bash
+python3 amazon_bedrock_ha.py us-east-1 us-west-2 "what is the largest city in the world? only give the answer no
+ details"
+```
+
+Here is the results output:
+
+```bash
+sys.argv has 4 arguments
+Argument 0: amazon_bedrock_ha.py
+Argument 1: us-east-1
+Argument 2: us-west-2
+Argument 3: what is the largest city in the world? only give the answre no details
+Using Regions: us-east-1 and us-west-2
+Using prompt: what is the largest city in the world? only give the answre no details
+0: From primary in us-east-1:  Tokyo
+1: From primary in us-east-1:  Tokyo
+2: From primary in us-east-1:  Tokyo
+Throttling detected, retrying with on-demand...
+3: From on-demand in us-west-2:  Tokyo
+4: From primary in us-east-1:  Tokyo
+```
+
 **NOTE) Without the throttling exception error-handling provided in the amazon_bedrock_ha.py script, the boto3 SDK would return an unhandled BedrockRuntime.Client.exceptions.ThrottlingException exception similar to ```botocore.exceptions.ClientError: An error occurred (ThrottlingException) when calling the DummyOperation operation: Unknown```. This error would continue to occur until throttling has stopped for the client.**
 
 ## Cleaning up
