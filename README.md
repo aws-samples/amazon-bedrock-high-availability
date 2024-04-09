@@ -44,7 +44,7 @@ aws bedrock create-provisioned-model-throughput \
    #ENSURE TO RECORD THE "provisionedModelArn" VALUE FROM THE OUTPUT OF THE COMMAND ABOVE  
 ```
 
-1. Run the following command to check the status of the Provisioned Throughput. Proceed to the next step only when the status is ```Created```
+2. Run the following command to check the status of the Provisioned Throughput. Proceed to the next step only when the status is ```Created```
 
 ```bash
 aws bedrock get-provisioned-model-throughput \
@@ -56,32 +56,32 @@ aws bedrock get-provisioned-model-throughput \
 1. Run the following command to execute the amazon_bedrock_ha.py Python script
 
 ```bash
+#Using default region values
 python3 amazon_bedrock_ha.py <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN> <REPLACE_ME_WITH_PROMPT>  
+
+#Using provided region 2 value 
+python3 amazon_bedrock_ha.py <REPLACE_ME_WITH_ON_DEMAND_REGION>  <REPLACE_ME_WITH_PROVISIONED_MODEL_ARN> <REPLACE_ME_WITH_PROMPT> 
 ```
 
-Here is an example with actual values and output for using a second on-demand region
+Below is an example execution of the amazon_bedrock_ha.py Python script using **us-west-2** as region 2 
 
 ```bash
-python3 amazon_bedrock_ha.py us-east-1 us-west-2 "what is the largest city in the world? only give the answer no
- details"
-```
+python3 amazon_bedrock_ha.py us-west-2 arn:aws:bedrock:us-east-1:AWSACCOUNTID:provisioned-model/PTMODELID  "what is the largest city in the world? only give the answer with no details"
 
-Here is the results output:
-
-```bash
+#example output
 sys.argv has 4 arguments
 Argument 0: amazon_bedrock_ha.py
-Argument 1: us-east-1
-Argument 2: us-west-2
-Argument 3: what is the largest city in the world? only give the answre no details
+Argument 1: us-west-2
+Argument 2: arn:aws:bedrock:us-east-1:AWSACCOUNTID:provisioned-model/PTMODELID
+Argument 3: what is the largest city in the world? only give the answer with no details
 Using Regions: us-east-1 and us-west-2
-Using prompt: what is the largest city in the world? only give the answre no details
-0: From primary in us-east-1:  Tokyo
-1: From primary in us-east-1:  Tokyo
-2: From primary in us-east-1:  Tokyo
+Using prompt: what is the largest city in the world? only give the answer with no details
+0: From provisioned throughput in us-east-1:  Tokyo
+1: From provisioned throughput in us-east-1:  Tokyo
+2: From provisioned throughput in us-east-1:  Tokyo
 Throttling detected, retrying with on-demand...
 3: From on-demand in us-west-2:  Tokyo
-4: From primary in us-east-1:  Tokyo
+4: From provisioned throughput in us-east-1:  Tokyo
 ```
 
 **NOTE) Without the throttling exception error-handling provided in the amazon_bedrock_ha.py script, the boto3 SDK would return an unhandled BedrockRuntime.Client.exceptions.ThrottlingException exception similar to ```botocore.exceptions.ClientError: An error occurred (ThrottlingException) when calling the DummyOperation operation: Unknown```. This error would continue to occur until throttling has stopped for the client.**

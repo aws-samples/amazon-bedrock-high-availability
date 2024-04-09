@@ -38,32 +38,9 @@ def call_bedrock_primary(client_error):
             raise client_error
         
         primary_response_body = json.loads(primary_response.get('body').read())
-        primary_response_text = f"From primary in {REGION1}: {primary_response_body.get('completion')}"
+        primary_response_text = f"From provisioned throughput in {REGION1}: {primary_response_body.get('completion')}"
 
         return primary_response_text
-    except NameError as name_error:
-        try:
-            # print(f"Calling Bedrock Provisioned Throughput: {name_error}")
-            primary_response = bedrock_primary_client.invoke_model(body=body, 
-                                                                modelId=ON_DEMAND_MODEL_ID,
-                                                                accept='application/json', 
-                                                                contentType='application/json')
-            if client_error:
-                raise client_error
-            
-            primary_response_body = json.loads(primary_response.get('body').read())
-            primary_response_text = f"From primary in {REGION1}: {primary_response_body.get('completion')}"
-            return primary_response_text
-        
-        except ClientError as client_exception:
-           
-            if client_exception.response['Error']['Code'] == 'ThrottlingException':
-                print("Throttling detected, retrying with on-demand...")
-                secondary_response = call_bedrock_secondary()
-                return secondary_response
-            # else:
-            # raise client_exception
-            raise name_error
             
     except ClientError as client_exception:
         if client_exception.response['Error']['Code'] == 'ThrottlingException':
@@ -102,26 +79,17 @@ if len(sys.argv) == 3:
         prompt = sys.argv[2]
     except IndexError:
         raise ValueError("Prompt and Provisioned model ARN are required if two parameters are passed")
-
-elif len(sys.argv) == 2:
+else:
     try:
-        prompt = sys.argv[1]
-        print(f"Using Regions: {REGION1} and {REGION2}")
-        assert valid_region(REGION1)
-        assert valid_region(REGION2)
-    except IndexError:
-        raise ValueError("Using default regions. A Prompt is required if one parameter is passed")
-
-elif len(sys.argv) == 4:
-    try:
-        REGION1 = sys.argv[1]
-        REGION2 = sys.argv[2]
+        REGION1 = (sys.argv[2]).split(":")[3]
+        REGION2 = sys.argv[1] 
+        provisioned_model_arn = sys.argv[2]
         prompt = sys.argv[3]
         print(f"Using Regions: {REGION1} and {REGION2}")
         assert valid_region(REGION1)
         assert valid_region(REGION2) 
     except IndexError:
-        raise ValueError("Prompt, Provisioned model ARN, and Region are required if three parameters are passed")
+        raise ValueError("Prompt, Provisioned model ARN, and Regions are required if four parameters are passed")
 
 formatted_prompt = f"Human: {prompt}\n\nAssistant:"
 print(f"Using prompt: {prompt}")
@@ -147,7 +115,6 @@ if __name__ == "__main__":
         else:
             client_error = None
         response = call_bedrock_primary(client_error)
-        # response_body = json.loads(response.get('body').read())
         print(f"{counter}: {response}")
         
     
