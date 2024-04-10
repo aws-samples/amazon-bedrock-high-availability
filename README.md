@@ -2,7 +2,9 @@
 
 ## Introduction
 
-In this repository, we'll explore how to set up high availability with Amazon Bedrock, a fully managed service that simplifies building and running applications on AWS. More specifically, we'll focus on leveraging Amazon Bedrock's provisioned throughput as our primary endpoint and using Amazon Bedrock on-demand as our secondary endpoint. Additionally, we'll demonstrate how to switch between regions using the same concept.
+Amazon Bedrock Provisioned Throughput enables you to provision a higher level of throughput for a model at a fixed cost so your Generative AI applications have a guranteed number of input and output tokens it can process. However, what happens if you have a usage spike you didn't plan for? You could increase your Provisioned Throughput, but with that comes downtime of your application as resources are provisioned and additional hourly or monthly costs. Instead, we recommend using Amazon Bedrock on-demand throughput either in the same or secondary region during these usage spikes. This allows your Generative AI applications to continue handling requests until the usage spike is over. 
+
+In this repository, we'll explore how to set up this approach with Amazon Bedrock with a focus on leveraging Amazon Bedrock's Provisioned Throughput as our primary endpoint and using Amazon Bedrock on-demand as our secondary endpoint. 
 
 **NOTE) The architecture in this repository is for development purposes only and will incur costs. A  production implementation of this solution should include additional features such as retry logic, observability, an API gateway, etc. For more information, please review the [AWS Well-Architected Framework](https://docs.aws.amazon.com/wellarchitected/latest/framework/the-pillars-of-the-framework.html).**
 
