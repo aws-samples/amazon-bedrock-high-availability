@@ -74,7 +74,7 @@ python3 amazon_bedrock_ha.py us-west-2 arn:aws:bedrock:us-east-1:AWSACCOUNTID:pr
 sys.argv has 4 arguments
 Argument 0: amazon_bedrock_ha.py
 Argument 1: us-west-2
-Argument 2: arn:aws:bedrock:us-east-1:277838234205:provisioned-model/ntcl13l2jx7j
+Argument 2: arn:aws:bedrock:us-east-1:AWSACCOUNTID:provisioned-model/PTMODELID
 Argument 3: what is the largest city in the world? only give the answer with no details
 Using Regions: us-east-1 and us-west-2
 Using prompt: what is the largest city in the world? only give the answer with no details
